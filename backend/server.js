@@ -10,7 +10,13 @@ const PORT = process.env.PORT || 5000;
 require("./config/db");
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://toko-web.netlify.app',
+    'https://toko-web-production.up.railway.app'
+  ]
+}));
 app.use(express.json());
 
 // =============================================================================
@@ -32,9 +38,16 @@ app.use("/api/admin", adminRoutes);
 
 // Route default
 app.get("/", (req, res) => {
-  res.send("API jalan");
+  res.json({
+    status: "success",
+    message: "API Toko Rajut - Uji Serkom Junior Web Developer",
+    version: "1.0.0",
+    endpoints: {
+      users: "/api/users",
+      admin: "/api/admin"
+    }
+  });
 });
-
 // =============================================================================
 // START SERVER
 // =============================================================================
