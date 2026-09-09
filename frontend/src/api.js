@@ -3,7 +3,7 @@
  * api.js — semua pemanggilan HTTP ke backend.
  * Publik: api | Admin: adminApi | Pembeli: pembeliApi
  */
-export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+export const API_BASE = import.meta.env.VITE_API_URL || 'https://toko-web-production.up.railway.app';
 
 export function authHeaders() {
   const token = localStorage.getItem('toko_token');
