@@ -3,7 +3,7 @@
  * api.js — semua pemanggilan HTTP ke backend.
  * Publik: api | Admin: adminApi | Pembeli: pembeliApi
  */
-export const API_BASE_URL = 'https://toko-web-production-39b9.up.railway.app/api';
+export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export function authHeaders() {
   const token = localStorage.getItem('toko_token');
@@ -101,7 +101,7 @@ export const adminApi = {
   // PEMBELI
   getPembeli: () => apiRequest('/api/admin/pembeli'),
   getPembeliById: (id) => apiRequest(`/api/admin/pembeli/${id}`),
-  createPembeli: (payload) => // ✅ TAMBAHKAN INI
+  createPembeli: (payload) =>
     apiRequest('/api/admin/pembeli', { method: 'POST', body: JSON.stringify(payload) }),
   updatePembeli: (id, payload) =>
     apiRequest(`/api/admin/pembeli/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),

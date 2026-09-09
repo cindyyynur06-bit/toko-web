@@ -91,7 +91,8 @@ export const STATUS_BAYAR_COLOR = {
   Dibayar: 'success',
 };
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// ✅ Perbaiki ini - hilangkan /api di akhir
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const DEFAULT_IMAGE = '/images/default-product.jpg';
 export const DEFAULT_AVATAR = '/images/default-avatar.png';

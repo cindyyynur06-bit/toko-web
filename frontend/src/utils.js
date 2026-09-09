@@ -3,10 +3,10 @@
  * utils.js — format tampilan, media, kategori, sesi, profil.
  */
 import { KELAMIN } from './constants';
-import { API_BASE } from './api';
 
 const TOKEN_KEY = 'toko_token';
 const ROLE_KEY = 'toko_role';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const EMPTY_MEDIA = new Set(['', 'default.jpg', 'default-logo.jpg', 'null', 'undefined']);
 
 export const PLACEHOLDER_IMAGE = '/logoo.png';  
