@@ -51,10 +51,9 @@ const createProduk = async (req, res) => {
     }
 
     const allowedKategori = [
-      "Baju Rajut",
-      "Tas Rajut",
-      "Mainan Rajut",
-      "Aksesoris Rajut",
+      "Bouquet Balon Bunga",
+      "Bouquet Hadiah (Gift Bouquet)",
+      "Bouquet Custom"
     ];
     if (kategori && !allowedKategori.includes(kategori)) {
       return res.status(400).json({
@@ -68,7 +67,7 @@ const createProduk = async (req, res) => {
       deskripsi,
       harga: parseInt(harga),
       gambar: gambar || null,
-      kategori: kategori || "Baju Rajut",
+      kategori: kategori || "Bouquet Custom",
     });
 
     res.status(201).json({
@@ -92,10 +91,9 @@ const updateProduk = async (req, res) => {
     }
 
     const allowedKategori = [
-      "Baju Rajut",
-      "Tas Rajut",
-      "Mainan Rajut",
-      "Aksesoris Rajut",
+      "Bouquet Balon Bunga",
+      "Bouquet Hadiah (Gift Bouquet)",
+      "Bouquet Custom"
     ];
     if (kategori && !allowedKategori.includes(kategori)) {
       return res.status(400).json({
@@ -149,7 +147,7 @@ const deleteProduk = async (req, res) => {
 };
 
 // =============================================================================
-// CRUD PEMBELI (USERS)
+// CRUD PEMBELI (USERS) - sama seperti sebelumnya
 // =============================================================================
 
 const listPembeli = async (req, res) => {
@@ -314,7 +312,7 @@ const deletePembeli = async (req, res) => {
 };
 
 // =============================================================================
-// CRUD ARTIKEL
+// CRUD ARTIKEL - sama seperti sebelumnya
 // =============================================================================
 
 const listArtikel = async (req, res) => {
@@ -430,7 +428,7 @@ const deleteArtikel = async (req, res) => {
 };
 
 // =============================================================================
-// STATISTIK & PEMBELIAN
+// STATISTIK & PEMBELIAN - sama seperti sebelumnya
 // =============================================================================
 
 const getStats = async (req, res) => {

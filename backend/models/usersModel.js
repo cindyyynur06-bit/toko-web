@@ -13,10 +13,7 @@ const createUser = async (userData) => {
 };
 
 const findUserByEmail = async (email) => {
-    const [rows] = await db.query(
-        `SELECT * FROM users WHERE email = ?`,
-        [email]
-    );
+    const [rows] = await db.query(`SELECT * FROM users WHERE email = ?`, [email]);
     return rows.length > 0 ? rows[0] : null;
 };
 
@@ -38,9 +35,12 @@ const findUserById = async (id) => {
     return rows.length > 0 ? rows[0] : null;
 };
 
-const findPasswdHashById = async (id) => {
-    const [rows] = await db.query(`SELECT passwd FROM users WHERE id = ?`, [id]);
-    return rows.length > 0 ? rows[0].passwd : null;
+const updateUserPassword = async (id, hashedPassword) => {
+    const [result] = await db.query(
+        `UPDATE users SET passwd = ? WHERE id = ?`,
+        [hashedPassword, id]
+    );
+    return result;
 };
 
 const updateUserProfile = async (id, userData) => {
@@ -104,7 +104,7 @@ module.exports = {
     findUserByEmail,
     findUserByCredential,
     findUserById,
-    findPasswdHashById,
+    updateUserPassword,
     updateUserProfile,
     deleteUser,
     isEmailExists,
