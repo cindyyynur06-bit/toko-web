@@ -13,7 +13,7 @@ require("./config/db");
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://toko-web.netlify.app',
+    'https://tokorajutcndy.netlify.app',
     'https://toko-web-production.up.railway.app'
   ]
 }));
