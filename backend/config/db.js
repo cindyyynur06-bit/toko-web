@@ -41,4 +41,4 @@ pool.getConnection((err, connection) => {
 
 // Untuk promise/async-await style (lebih modern)
 const db = pool.promise();
-module.exports = db;
+module.exports = db;7
