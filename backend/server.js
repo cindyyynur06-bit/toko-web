@@ -10,7 +10,10 @@ const PORT = process.env.PORT || 5000;
 require("./config/db");
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
 app.use(express.json());
 
 // =============================================================================
@@ -39,7 +42,7 @@ app.get("/", (req, res) => {
 // START SERVER
 // =============================================================================
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(`Server running on port ${PORT}`);
 });
