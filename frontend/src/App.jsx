@@ -7,6 +7,7 @@ import PembeliLayout from './layouts/PembeliLayout';
 import PublicLayout from './layouts/PublicLayout';
 import HomePage from './pages/HomePage';
 import TokoPage from './pages/TokoPage';
+import KeranjangPage from './pages/KeranjangPage'; 
 import ArtikelListPage from './pages/ArtikelListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ArtikelDetailPage from './pages/ArtikelDetailPage';
@@ -38,6 +39,7 @@ export default function App() {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/toko" element={<TokoPage />} />
+            <Route path="/keranjang" element={<KeranjangPage />} />
             <Route path="/artikel" element={<ArtikelListPage />} />
             <Route path="/produk/:id" element={<ProductDetailPage />} />
             <Route path="/artikel/:id" element={<ArtikelDetailPage />} />

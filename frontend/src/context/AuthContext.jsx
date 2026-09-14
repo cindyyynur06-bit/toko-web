@@ -1,34 +1,58 @@
 // frontend/src/context/AuthContext.jsx
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { api } from '../api';
-import { getToken, getRole, saveSession, clearSession } from '../utils';  // ← HAPUS getSession
+import { getToken, getRole, saveSession, clearSession } from '../utils';
 
 const AuthContext = createContext(null);
+
+const CART_KEY = 'toko_cart';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(null);
 
-  // Cek session saat pertama kali load
+  // ============================================================
+  // CART STATE (localStorage persistence)
+  // ============================================================
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem(CART_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch (e) {
+      console.error('Gagal simpan cart:', e);
+    }
+  }, [cart]);
+
+  // ============================================================
+  // SESSION
+  // ============================================================
   useEffect(() => {
     const savedToken = getToken();
-    const savedRole = getRole();  // ← PAKAI getRole()
+    const savedRole = getRole();
 
     if (savedToken && savedRole) {
       setToken(savedToken);
-      setUser({ role: savedRole });  // ← Simpan role sebagai user
+      setUser({ role: savedRole });
     }
     setLoading(false);
   }, []);
 
-  // Fungsi login
+  // ============================================================
+  // AUTH
+  // ============================================================
   const login = async (credential, passwd) => {
     try {
       const data = await api.login(credential, passwd);
-      
       if (data.token) {
-        // ← PAKAI saveSession(token, role) sesuai utils
         saveSession(data.token, data.user.role);
         setToken(data.token);
         setUser(data.user);
@@ -40,7 +64,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Fungsi register
   const register = async (payload) => {
     try {
       const data = await api.register(payload);
@@ -50,23 +73,63 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Fungsi logout
   const logout = () => {
-    clearSession();  // ← PAKAI clearSession() dari utils
+    clearSession();
     setToken(null);
     setUser(null);
+    // cart sengaja TIDAK dihapus supaya tetap ada setelah login lagi
   };
 
-  // Cek apakah user login
-  const isAuthenticated = !!token && !!user;
+  // ============================================================
+  // CART OPERATIONS
+  // ============================================================
+  const addToCart = (product, qty = 1) => {
+    setCart((prev) => {
+      const id = product.id_produk || product.id;
+      const existing = prev.find((i) => (i.id_produk || i.id) === id);
+      if (existing) {
+        return prev.map((i) =>
+          (i.id_produk || i.id) === id ? { ...i, qty: i.qty + qty } : i
+        );
+      }
+      return [...prev, { ...product, qty }];
+    });
+  };
 
-  // Cek role user
+  const removeFromCart = (id) => {
+    setCart((prev) => prev.filter((i) => (i.id_produk || i.id) !== id));
+  };
+
+  const updateQty = (id, qty) => {
+    if (qty < 1) return removeFromCart(id);
+    setCart((prev) =>
+      prev.map((i) => ((i.id_produk || i.id) === id ? { ...i, qty } : i))
+    );
+  };
+
+  const clearCart = () => setCart([]);
+
+  const totalItem = useMemo(
+    () => cart.reduce((sum, i) => sum + i.qty, 0),
+    [cart]
+  );
+
+  const totalHarga = useMemo(
+    () => cart.reduce((sum, i) => sum + i.harga * i.qty, 0),
+    [cart]
+  );
+
+  // ============================================================
+  // ROLE
+  // ============================================================
+  const isAuthenticated = !!token && !!user;
   const isAdmin = user?.role === 'admin';
   const isPembeli = user?.role === 'pembeli';
 
   return (
     <AuthContext.Provider
       value={{
+        // auth
         user,
         token,
         loading,
@@ -76,6 +139,14 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         isAdmin,
         isPembeli,
+        // cart
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQty,
+        clearCart,
+        totalItem,
+        totalHarga,
       }}
     >
       {children}
@@ -83,7 +154,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook untuk pakai AuthContext
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
